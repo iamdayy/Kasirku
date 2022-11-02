@@ -100,7 +100,7 @@ export default defineComponent({
           this.setShow(true);
           this.validPassword = true;
           await this.register(user);
-          router.push('/tabs/home')
+          router.push({name: 'My-Angkringan'})
         } catch (error: any) {
           console.log(error.message);
         } finally {

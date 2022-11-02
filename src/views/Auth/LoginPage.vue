@@ -79,7 +79,7 @@ export default defineComponent({
       try {
         this.setShow(true);
         await this.login(user);
-        router.push("/tabs /home");
+        router.push({name: 'My-Angkringan'});
       } catch (error: any) {
         console.log(error.message);
       } finally {

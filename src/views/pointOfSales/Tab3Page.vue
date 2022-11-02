@@ -14,7 +14,7 @@
           <ion-title size="large">Kasir</ion-title>
         </ion-toolbar>
       </ion-header>
-      <div class="h-full w-full" :style="`background-image: url('${registerBg2}'); background-repeat: no-repeat;`">
+      <div :style="`background-image: url('${registerBg2}'); background-repeat: no-repeat;`">
         <Tab3Container />
       </div>
     </ion-content>

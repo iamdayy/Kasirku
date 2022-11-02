@@ -14,14 +14,20 @@
       <img class="product_detail_img" :src="imageUrl" />
       <ion-card-header>
         <div class="metaInfo">
+          <ion-card-subtitle>{{ product?.category.title }}</ion-card-subtitle>
           <ion-card-title>{{ product?.title }}</ion-card-title>
-          <ion-card-subtitle>{{ product?.category.name }}</ion-card-subtitle>
-          <h3>{{ product?.price }}</h3>
+          
         </div>
       </ion-card-header>
       <ion-card-content>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-        iaculis mollis ligula sed ultrices.
+        <ion-item>
+          <h3>Harga :</h3>
+          <ion-label slot="end"><h3>Stok :</h3></ion-label>
+        </ion-item>
+        <ion-item>
+          <h3>{{ product?.price }}</h3>
+          <ion-label slot="end"><h3>{{ product?.stock }}</h3></ion-label>
+        </ion-item>
       </ion-card-content>
       <ion-footer>
         <ion-item>
@@ -56,6 +62,7 @@ import {
   IonCardSubtitle,
   IonFooter,
   IonItem,
+  IonLabel
 } from "@ionic/vue";
 import { defineComponent, ref } from "vue";
 import { close, open, trash, create } from "ionicons/icons";
@@ -80,6 +87,7 @@ export default defineComponent({
     IonCardSubtitle,
     IonFooter,
     IonItem,
+    IonLabel
   },
   setup() {
     const imageUrl = ref("");

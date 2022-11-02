@@ -34,7 +34,7 @@ const actions = {
     },
     logout({ commit }: any) {
         AuthService.logout().then(() => {
-            router.push('/login')
+            router.push('/auth/login')
             commit("logout")
         }
         );

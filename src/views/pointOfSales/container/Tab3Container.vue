@@ -2,23 +2,23 @@
   <div class="py-2">
     <ion-card>
       <ion-card-header>
-        <ion-card-title>Product List</ion-card-title>
+        <ion-card-title>Daftar Produk</ion-card-title>
       </ion-card-header>
       <ion-card-content>
         <ion-item>
-        <ion-button
-          color="primary"
-          expand="block"
-          size="default"
-          @click="openAddProductModal()"
-          >Tambah Produk</ion-button
-        >
-        <ion-buttons slot="end">
-          <ion-button @click="openCartModal()"
-            ><ion-icon slot="icon-only" :icon="cart"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-item>
+          <ion-button
+            color="primary"
+            expand="block"
+            size="default"
+            @click="openAddProductModal()"
+            >Tambah Produk</ion-button
+          >
+          <ion-buttons slot="end">
+            <ion-button @click="openCartModal()"
+              ><ion-icon slot="icon-only" :icon="cart"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
         <ion-searchbar placeholder="Cari..." v-model="search"></ion-searchbar>
         <ion-grid>
           <ion-row>
@@ -39,14 +39,20 @@
           </ion-row>
         </ion-grid>
         <ion-list>
-          <ion-item v-for="product in products" :key="product.id">
-            <thumbnailPart :image="product.image" :alt="product.title" />
-            <ion-title>{{ product.title }}</ion-title>
-            <ion-text>Idr {{ product.price }}</ion-text>
+          <ion-item v-for="productData in products" :key="productData.id">
+            <thumbnailPart
+              :image="productData.image"
+              :alt="productData.title"
+            />
+            <ion-label>
+              <h1>{{ productData.title }}</h1>
+              <p>{{ productData.category.title }}</p>
+              <ion-note
+                ><p>Idr {{ productData.price }}</p></ion-note
+              >
+            </ion-label>
             <ion-buttons slot="end">
-              <ion-button slot="icon-only" @click="addToCart(product)"
-                ><ion-icon :icon="bagAdd"></ion-icon
-              ></ion-button>
+              <ion-button slot="icon-only" size="small" @click="addToCart(productData)"><ion-icon :icon="bagAdd"></ion-icon></ion-button>
             </ion-buttons>
           </ion-item>
         </ion-list>
@@ -57,7 +63,6 @@
 
 <script lang="ts">
 import {
-  IonTitle,
   IonButton,
   IonButtons,
   IonIcon,
@@ -69,7 +74,6 @@ import {
   IonItem,
   IonSearchbar,
   modalController,
-  IonText,
   IonLabel,
   IonRadio,
   IonRadioGroup,
@@ -89,7 +93,6 @@ import { useStore } from "vuex";
 export default defineComponent({
   name: "Tab3Container",
   components: {
-    IonTitle,
     IonButton,
     IonButtons,
     IonIcon,
@@ -100,7 +103,7 @@ export default defineComponent({
     IonCardContent,
     IonItem,
     IonSearchbar,
-    IonText,
+
     thumbnailPart,
     IonLabel,
     IonRadio,
@@ -108,7 +111,6 @@ export default defineComponent({
     IonGrid,
     IonRow,
     IonCol,
-
   },
   setup() {
     const store = useStore();
@@ -118,7 +120,7 @@ export default defineComponent({
       logOut,
       bagAdd,
       cart,
-      getData
+      getData,
     };
   },
   data() {
@@ -183,7 +185,7 @@ export default defineComponent({
         component: modalCart,
       });
       modal.present();
-    }
+    },
   },
 });
 </script>

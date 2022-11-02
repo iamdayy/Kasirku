@@ -6,7 +6,7 @@ import TabsPage from '../views/TabsPage.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/tabs/home'
+    redirect: '/tabs/my-angkringan'
   },
   {
     path: '/tabs/',
@@ -17,7 +17,7 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '',
-        redirect: '/tabs/home'
+        redirect: '/tabs/my-angkringan'
       },
       {
         path: 'home',
@@ -75,7 +75,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const loggedIn = localStorage.getItem("user");
   if (to.path === "/auth/login" && loggedIn) {
-    next({ name: "Home" });
+    next({ name: "My-Angkringan" });
   } else if (
     to.matched.some((record) => record.meta.requiresAuth) &&
     !loggedIn

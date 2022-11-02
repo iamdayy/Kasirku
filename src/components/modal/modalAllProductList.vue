@@ -3,64 +3,50 @@
     <ion-toolbar>
       <ion-title>Semua Produk</ion-title>
       <ion-buttons slot="end">
-        <ion-button @click="cancel()" slot="icon-only"><ion-icon :icon="close"></ion-icon></ion-button>
+        <ion-button @click="cancel()" slot="icon-only"
+          ><ion-icon :icon="close"></ion-icon
+        ></ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
   <ion-content class="ion-padding">
     <ion-searchbar placeholder="Cari..." v-model="search"></ion-searchbar>
-        <ion-grid>
-          <ion-row>
-            <ion-radio-group value="" v-model="filter">
-              <ion-col>
-                <ion-label>Semua</ion-label>
-                <ion-radio value=""></ion-radio>
-              </ion-col>
-              <ion-col>
-                <ion-label>Bakaran</ion-label>
-                <ion-radio value="bakaran"></ion-radio>
-              </ion-col>
-              <ion-col>
-                <ion-label>Minuman</ion-label>
-                <ion-radio value="minuman"></ion-radio>
-              </ion-col>
-            </ion-radio-group>
-          </ion-row>
-        </ion-grid>
-      <ion-list>
-          <ion-item
-            v-for="productData in products"
-            :key="productData.id"
+    <ion-grid>
+      <ion-row>
+        <ion-radio-group value="" v-model="filter">
+          <ion-col>
+            <ion-label>Semua</ion-label>
+            <ion-radio value=""></ion-radio>
+          </ion-col>
+          <ion-col>
+            <ion-label>Bakaran</ion-label>
+            <ion-radio value="bakaran"></ion-radio>
+          </ion-col>
+          <ion-col>
+            <ion-label>Minuman</ion-label>
+            <ion-radio value="minuman"></ion-radio>
+          </ion-col>
+        </ion-radio-group>
+      </ion-row>
+    </ion-grid>
+    <ion-list>
+      <ion-item v-for="productData in products" :key="productData.id">
+        <ion-title
+          ><thumbnailPart :image="productData.image" :alt="productData.title"
+        /></ion-title>
+        <ion-label>
+          <h1>{{ productData.title }}</h1>
+          <p>{{ productData.category.title }}</p>
+          <ion-note
+            ><p>Idr {{ productData.price }}</p></ion-note
           >
-            <ion-grid>
-              <ion-row>
-                <ion-col><thumbnailPart :image="productData.image" :alt="productData.title"/></ion-col>
-                <ion-col
-                  ><ion-title>{{ productData.title }}</ion-title></ion-col
-                >
-                <ion-col
-                  ><ion-note slot="end">{{
-                    productData.category.title
-                  }}</ion-note>
-                  <br
-                /></ion-col>
-                <ion-col
-                  ><ion-label>Idr {{ productData.price }}</ion-label></ion-col
-                >
-                <ion-col
-                  ><ion-label> {{ productData.stock }}</ion-label></ion-col
-                >
-                <ion-col
-                  ><ion-buttons
-                    ><ion-button @click="openProductDetail(productData)" slot="icon-only"
-                      ><ion-icon
-                        :icon="open"
-                      ></ion-icon></ion-button></ion-buttons
-                ></ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-item>
-        </ion-list>
+        </ion-label>
+        <ion-buttons
+          ><ion-button @click="openProductDetail(productData)" slot="icon-only"
+            ><ion-icon :icon="open"></ion-icon></ion-button
+        ></ion-buttons>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </template>
 
@@ -89,7 +75,7 @@ import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 import { close, open } from "ionicons/icons";
 import thumbnailPart from "@/components/part/thumbnailPart.vue";
-import ModalProductDetail from "@/components/modal/modalProductDetail.vue"
+import ModalProductDetail from "@/components/modal/modalProductDetail.vue";
 
 export default defineComponent({
   name: "allProductsListModal",
@@ -111,19 +97,19 @@ export default defineComponent({
     IonSearchbar,
     IonRadioGroup,
     IonRadio,
-    thumbnailPart
+    thumbnailPart,
   },
   setup() {
     return {
-        close,
-        open
-    }
+      close,
+      open,
+    };
   },
   data() {
     return {
-        filter: '',
-        search: ''
-    }
+      filter: "",
+      search: "",
+    };
   },
   computed: {
     ...mapGetters("product", ["getProductsData"]),
@@ -166,12 +152,12 @@ export default defineComponent({
       return modalController.dismiss(null, "cancel");
     },
     async openProductDetail(product: any) {
-        const modal = await modalController.create({
+      const modal = await modalController.create({
         component: ModalProductDetail,
-        componentProps: { product: product }
+        componentProps: { product: product },
       });
       modal.present();
-    }
-  }
+    },
+  },
 });
 </script>

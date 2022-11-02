@@ -1,7 +1,9 @@
 <template>
-  <ion-thumbnail>
-    <img :src="imageUrl" :alt="alt" />
-  </ion-thumbnail>
+  <div class="mr-6">
+    <ion-thumbnail>
+      <img :src="imageUrl" :alt="alt" />
+    </ion-thumbnail>
+  </div>
 </template>
 <script lang="ts">
 import { supabase } from "@/supabase/supabase.config";
