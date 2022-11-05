@@ -3,44 +3,35 @@ const state = {
 
     orderStatus: false,
     orders: [],
-    pdf: '',
+    pdf: null,
     pdf_status: false
 }
 const getters = {
-    getInvoice(state: {pdf: any}) {
+    getInvoice(state: { pdf: any }) {
         return state.pdf;
     },
     getOrdersData(state: { orders: any; }) {
         return state.orders;
     },
-    getMinimalOrdersData(state: { orders: any}) {
+    getMinimalOrdersData(state: { orders: any }) {
         return state.orders.filter((x: any, y: number) => y < 3)
     }
 }
 const actions = {
-    async fetchOrders({commit}: any) {
-            const data = await orderService.fetchData();
-            commit("SetOrderResponse")
-            console.log(data);
-            commit("SetOrderResponse", data.data);
+    async fetchOrders({ commit }: any) {
+        const data = await orderService.fetchData();
+        commit("SetOrderResponse")
+        console.log(data);
+        commit("SetOrderResponse", data.data);
     },
-    async checkout({commit}: any, order: any) {
+    async checkout({ commit }: any, order: any) {
         try {
-        const data = await orderService.addNewOrder(order);
+            const data = await orderService.addNewOrder(order);
 
-        commit("SetOrderStatus");
-        commit("SetOrderResponse", data)
+            commit("SetOrderStatus");
+            commit("SetOrderResponse", data)
         } catch (error) {
             console.log(error);
-        }
-    },
-    async loadInvoice({ commit }: any, path: any) {
-        try {
-            const data = await orderService.loadPdf(path);
-            commit("Set_Pdf",  data)
-            commit("Pdf_Status")
-        } catch (error) {
-            commit("Set_Pdf", error)
         }
     }
 }

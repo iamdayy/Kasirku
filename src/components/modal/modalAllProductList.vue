@@ -31,9 +31,7 @@
     </ion-grid>
     <ion-list>
       <ion-item v-for="productData in products" :key="productData.id">
-        <ion-title
-          ><thumbnailPart :image="productData.image" :alt="productData.title"
-        /></ion-title>
+        <thumbnailPart :image="productData.image" :alt="productData.title" />
         <ion-label>
           <h1>{{ productData.title }}</h1>
           <p>{{ productData.category.title }}</p>

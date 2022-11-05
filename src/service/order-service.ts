@@ -1,7 +1,9 @@
 import { supabase } from '@/supabase/supabase.config';
+
+
 class OrderServices {
     async fetchData() {
-        const { data, error } = await supabase.from("order").select(`*,product_order(*)`)
+        const { data, error } = await supabase.from("order").select(`*, product_order(*, product_id(*))`)
         return { data, error }
     }
     async addNewOrder(order: any) {
@@ -31,15 +33,6 @@ class OrderServices {
         } catch (error) {
             console.log(error);
 
-        }
-    }
-    async loadPdf(path: any) {
-        try {
-       const { data, error } = await supabase.storage.from("invoice-pdf").download(path);
-       if (error) { throw error }
-       return data
-        } catch (error) {
-            return error
         }
     }
 }

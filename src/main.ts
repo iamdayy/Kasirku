@@ -27,6 +27,7 @@ import '@/assets/css/index.css'
 import './registerServiceWorker'
 import store from './store';
 
+
 const app = createApp(App)
   .use(IonicVue)
   .use(router)

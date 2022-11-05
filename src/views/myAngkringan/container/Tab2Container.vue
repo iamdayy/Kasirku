@@ -6,18 +6,18 @@
         <ion-card-title>Pesanan</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <StatsCardPart />
+        <StatsCardPart :TotalOrders="getOrdersData"/>
       </ion-card-content>
     </ion-card>
-    <ion-card>
+    <!-- <ion-card>
       <ion-card-header>
         <ion-card-subtitle>Riwayat</ion-card-subtitle>
         <ion-card-title>Pesanan</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <BarChart />
+        <LineChart :data="getOrdersData" />
       </ion-card-content>
-    </ion-card>
+    </ion-card> -->
     <ion-card>
       <ion-card-header>
         <ion-card-subtitle>Daftar</ion-card-subtitle>
@@ -91,7 +91,7 @@
 </template>
 <script lang="ts">
 import StatsCardPart from "@/components/part/StatsCardPart.vue"
-import BarChart from "@/components/Barchart.vue"
+// import LineChart from "@/components/LineChart.vue"
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 import {
@@ -126,7 +126,7 @@ export default defineComponent({
     IonNote,
     IonButton,
     thumbnailPart,
-    BarChart,
+    // LineChart,
     StatsCardPart
   },
   setup() {
@@ -135,7 +135,7 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapGetters("order", ["getMinimalOrdersData"]),
+    ...mapGetters("order", ["getMinimalOrdersData", "getOrdersData"]),
     ...mapGetters("product", ["getMinimalProductsData"]),
   },
   methods: {

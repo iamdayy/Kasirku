@@ -10,39 +10,13 @@
     </ion-toolbar>
   </ion-header>
   <ion-content class="ion-padding">
-    <ion-searchbar placeholder="Cari..." v-model="search"></ion-searchbar>
-    <ion-grid>
-      <ion-row>
-        <ion-radio-group value="" v-model="filter">
-          <ion-col>
-            <ion-label>Semua</ion-label>
-            <ion-radio value=""></ion-radio>
-          </ion-col>
-          <ion-col>
-            <ion-label>Bakaran</ion-label>
-            <ion-radio value="bakaran"></ion-radio>
-          </ion-col>
-          <ion-col>
-            <ion-label>Minuman</ion-label>
-            <ion-radio value="minuman"></ion-radio>
-          </ion-col>
-        </ion-radio-group>
-      </ion-row>
-    </ion-grid>
     <ion-list>
-      <ion-item v-for="orderData in getOrdersData" :key="orderData.id">
-        <ion-label
-          ><h3>{{ orderData.invoice_id }}</h3>
-          <p>{{ orderData.table }}</p></ion-label
-        >
-        <ion-note slot="end"
-          ><h4>Idr {{ orderData.amount }}</h4></ion-note
-        ><ion-buttons
-        slot="end"
-          ><ion-button @click="openOrderDetail(orderData)" slot="icon-only"
-            ><ion-icon :icon="open"></ion-icon></ion-button
-        ></ion-buttons>
-      </ion-item>
+      <ion-item button :detail="true">
+    <ion-label>
+      <h3>Button Item</h3>
+      <p>Detail set to true - detail arrow displays on both modes</p>
+    </ion-label>
+  </ion-item>
     </ion-list>
   </ion-content>
 </template>
@@ -60,18 +34,11 @@ import {
   modalController,
   IonList,
   IonIcon,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonNote,
-  IonSearchbar,
-  IonRadioGroup,
-  IonRadio,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 import { close, open } from "ionicons/icons";
-import ModalOrderDetail from "@/components/modal/modalOrderDetail.vue";
+import ModalInvoice from "@/components/modal/modalInvoice.vue";
 
 export default defineComponent({
   name: "allProductsListModal",
@@ -86,13 +53,6 @@ export default defineComponent({
     IonLabel,
     IonList,
     IonIcon,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonNote,
-    IonSearchbar,
-    IonRadioGroup,
-    IonRadio,
   },
   setup() {
     return {
@@ -148,7 +108,7 @@ export default defineComponent({
     },
     async openOrderDetail(orderData: any) {
       const modal = await modalController.create({
-        component: ModalOrderDetail,
+        component: ModalInvoice,
         componentProps: { order: orderData },
       });
       modal.present();

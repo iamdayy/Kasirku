@@ -23,7 +23,6 @@
             </ion-item>
             <ion-button expand="block" size="large" @click="handleLogin(user)">
               Login
-              <ion-spinner v-if="isShow" />
             </ion-button>
             <p>
               <a href="/auth/forgot-password" class="text-sm"
@@ -39,8 +38,8 @@
 </template>
 
 <script lang="ts">
-import { IonButton, IonSpinner, IonItem, IonInput, IonLabel } from "@ionic/vue";
-import { defineComponent, ref } from "vue";
+import { IonButton, IonItem, IonInput, IonLabel, loadingController, toastController } from "@ionic/vue";
+import { defineComponent } from "vue";
 import { mapActions } from "vuex";
 import router from "@/router";
 
@@ -52,15 +51,9 @@ export default defineComponent({
   name: "HomePage",
   components: {
     IonButton,
-    IonSpinner,
     IonItem,
     IonInput,
     IonLabel,
-  },
-  setup() {
-    const isShow = ref(false);
-    const setShow = (state: boolean) => (isShow.value = state);
-    return { isShow, setShow };
   },
   data() {
     return {
@@ -76,14 +69,22 @@ export default defineComponent({
   methods: {
     ...mapActions("auth", ["login"]),
     async handleLogin(user: any) {
+      const loader = await loadingController.create({})
+      const toast = await toastController.create({ duration: 3000 })
       try {
-        this.setShow(true);
-        await this.login(user);
-        router.push({name: 'My-Angkringan'});
+        await loader.present();
+        const { error } = await this.login(user);
+        
+        if (error) throw error;
+
+        toast.message = 'Berhasil dong... Login nya'
+        await toast.present()
       } catch (error: any) {
-        console.log(error.message);
+        toast.message = 'Sepertinya ada yang salah... coba deh ulangi...'
+        await toast.present();
       } finally {
-        this.setShow(false);
+        await loader.dismiss();
+        router.push({name: 'My-Angkringan'});
       }
     },
   },

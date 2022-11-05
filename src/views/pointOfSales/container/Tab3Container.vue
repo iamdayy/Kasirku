@@ -80,6 +80,7 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonNote
 } from "@ionic/vue";
 import { logOut, bagAdd, cart } from "ionicons/icons";
 import { computed, defineComponent } from "vue";
@@ -103,7 +104,7 @@ export default defineComponent({
     IonCardContent,
     IonItem,
     IonSearchbar,
-
+    IonNote,
     thumbnailPart,
     IonLabel,
     IonRadio,

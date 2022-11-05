@@ -1,12 +1,20 @@
-import router from "@/router";
 import AuthService from "@/service/auth-service"
 
 const state = {
+    profile: [],
+    session: null,
     user: [],
     error: "",
     status: false
 }
-const getters = {}
+const getters = {
+    getProfile(state: { profile: any }) {
+        return state.profile
+    },
+    Session(state: { session: any }) {
+        return state.session
+    }
+}
 const actions = {
     register({ commit }: any, user: { email: any; password: any }) {
         return AuthService.register(user).then(
@@ -32,17 +40,51 @@ const actions = {
                 return Promise.reject(error);
             })
     },
-    logout({ commit }: any) {
-        AuthService.logout().then(() => {
-            router.push('/auth/login')
-            commit("logout")
-        }
-        );
+    fetchProfile({ commit }: any, user: { id: any; }) {
+        return AuthService.getProfile(user).then(
+            (user) => {
+                commit("SET_PROFILE", user.data)
+                return Promise.resolve(user)
+            },
+            (error) => {
+                commit("SET_ERROR", error)
+                return Promise.resolve(error)
+            }
+        )
+    },
+    updateProfile({ commit }: any, profile: any) {
+        return AuthService.updateProfile(profile).then(
+            () => { commit("SET_STATUS") },
+            (error) => {
+                return Promise.resolve(error)
+            }
+        )
+    },
+    getSession({ commit }: any) {
+        return AuthService.getSession().then((data: any) => {
+            commit("SET_SESSION", data);
+            return Promise.resolve(data)
+        },
+            (error) => {
+                commit("SET_ERROR", error);
+                return Promise.resolve(error)
+            }
+        )
+    },
+    async logout({ commit }: any) {
+        return await AuthService.logout()
+        commit("logout")
     }
 }
 const mutations = {
     SET_USER(state: { user: any; }, payload: any) {
         state.user = payload
+    },
+    SET_PROFILE(state: { profile: any; }, payload: any) {
+        state.profile = payload
+    },
+    SET_SESSION(state: { session: any; }, payload: any) {
+        state.session = payload
     },
     SET_ERROR(state: { error: any; }, payload: any) {
         state.error = payload
