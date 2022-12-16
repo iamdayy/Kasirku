@@ -9,15 +9,6 @@ class ProductServices {
   `);
     return { data, error };
   }
-  async loadProductsByCategory() {
-    const { data, error } = await supabase.from("category").select(`
-    *,
-    products (
-      *
-    )
-  '`);
-    return { data, error };
-  }
   loadImage(payload: { image: string; }) {
     const { data} = supabase.storage.from('product-photo').getPublicUrl(payload.image);
     return { data, }
@@ -64,7 +55,6 @@ class ProductServices {
     return { success: true, data: dbData };
   }
   async removeProduct(product: { id: any, image: any }) {
-    try {
       // delete from database
       const { error: prodError } = await supabase.from("products")
         .delete()
@@ -79,10 +69,6 @@ class ProductServices {
 
         if (storageError) throw storageError;
       }
-    } catch (e: any) {
-      console.log(e);
-      throw Error(e);
-    }
   }
 }
 export default new ProductServices;

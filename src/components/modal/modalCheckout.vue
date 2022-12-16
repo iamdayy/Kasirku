@@ -91,10 +91,11 @@ import {
 import { defineComponent, ref } from "vue";
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { close } from "ionicons/icons";
-import modalInvoice from "./modalInvoice.vue";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-
+import modalOrderDetail from "./modalOrderDetail.vue";
+import { usePdf } from "@/service/pdf-service"
+// import jsPDF from "jspdf";
+// import autoTable from "jspdf-autotable";
+const { createPdf } = usePdf()
 export default defineComponent({
   name: "checkoutModal",
   components: {
@@ -140,6 +141,7 @@ export default defineComponent({
   },
   computed: {
     ...mapState("cart", ["cart"]),
+    ...mapState("order",["response"]),
     ...mapGetters("cart", ["cartTotalPrice"]),
     ...mapGetters("order", ["getOrderData"]),
   },
@@ -152,63 +154,30 @@ export default defineComponent({
     ...mapMutations("cart", ["updateCartFromLocalStorage", "removeFromCart"]),
     async handleCheckout() {
       try {
-        this.generatePdf();
-        this.order.amount = this.cartTotalPrice;
         this.order.products = this.cart;
+        this.order.amount = this.cartTotalPrice;
+        const pdf = await createPdf(this.order);
+        this.fileInfo = pdf;
         this.order.invoice = this.fileInfo;
+        console.log(this.order);
         await this.checkout(this.order);
         this.success = true;
+        if (this.success) {
+        this.openDetailOrderModal(this.response);
+        }
       } catch (error) {
         console.log(error);
       }
     },
-    async openInvoiceModal() {
+    async openDetailOrderModal(payload: any) {
       const modal = await modalController.create({
-        component: modalInvoice,
+        component: modalOrderDetail,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
         componentProps: {
-          invoicePath: this.getOrderData.dbData[0].invoice_pdf,
+          order: payload
         },
       });
       modal.present();
-    },
-    generatePdf() {
-      const doc = new jsPDF({
-        orientation: "portrait",
-        unit: "in",
-        format: "letter",
-      });
-      let info: any[] = [];
-
-      this.cart.forEach((element: any) => {
-        info.push([element.title, element.price, element.quantity]);
-      });
-      autoTable(doc, {
-        head: [["Title", "Harga", "Qty"]],
-        body: info,
-        margin: { left: 0.5, top: 1.25 },
-      });
-      // text is placed using x, y coordinates
-      doc.setFontSize(16).text("Nota " + this.order.transaction_num, 0.5, 1.0);
-      // create a line under heading
-      doc.setLineWidth(0.01).line(0.5, 1.1, 8.0, 1.1);
-      // Using array of sentences
-      doc
-        .setFont("helvetica")
-        .setFontSize(12)
-        .text(this.order.message, 0.5, 3.5, { align: "left", maxWidth: 7.5 });
-
-      // Creating footer and saving file
-      doc
-        .setFont("times")
-        .setFontSize(11)
-        .setTextColor(0, 0, 255)
-        .text(
-          "Terima Kasih Dan Kembali Lagi....",
-          0.5,
-          doc.internal.pageSize.height - 0.5
-        );
-      this.fileInfo = doc.output("blob");
     },
     loadProductData() {
       this.updateCartFromLocalStorage();

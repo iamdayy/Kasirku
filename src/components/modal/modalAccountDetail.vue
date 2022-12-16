@@ -11,46 +11,51 @@
   </ion-header>
 
   <ion-content>
-    <!-- <avatar v-model:path="getProfile.avatar_url"></avatar> -->
-    <form @submit.prevent="handleUpdateProfile">
-      <ion-item>
-        <ion-label>
-          <p>Email</p>
-          <p v-if="Session">{{ Session.data?.session?.user?.email }}</p>
-        </ion-label>
-      </ion-item>
+    <avatar v-model:path="getProfile.avatar_url"></avatar>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Data Pribadi Anda</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <form @submit.prevent="handleUpdateProfile">
+          <ion-item>
+            <ion-label>
+              <p>Email</p>
+              <p v-if="Session">{{ Session.data?.session?.user?.email }}</p>
+            </ion-label>
+          </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">Name</ion-label>
-        <ion-input
-          type="text"
-          name="username"
-          v-model="getProfile.username"
-        ></ion-input>
-      </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Name</ion-label>
+            <ion-input
+              type="text"
+              name="username"
+              v-model="getProfile.username"
+            ></ion-input>
+          </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">Website</ion-label>
-        <ion-input
-          type="url"
-          name="website"
-          v-model="getProfile.website"
-        ></ion-input>
-      </ion-item>
-      <div class="ion-text-center">
-        <ion-button fill="clear" type="submit">Update Profile</ion-button>
-      </div>
-    </form>
-
-    <div class="ion-text-center">
-      <ion-button @click="handleSignOut">Log Out</ion-button>
-    </div>
+          <ion-item>
+            <ion-label position="stacked">Website</ion-label>
+            <ion-input
+              type="url"
+              name="website"
+              v-model="getProfile.website"
+            ></ion-input>
+          </ion-item>
+            <ion-item>
+              <ion-button @click="handleSignOut">Log Out</ion-button>
+              <ion-buttons slot="end">
+              <ion-button color="success" type="submit"><ion-icon :icon="save" name="save"></ion-icon></ion-button>
+            </ion-buttons>
+          </ion-item>
+        </form>
+      </ion-card-content>
+    </ion-card>
   </ion-content>
 </template>
 
 <script lang="ts">
 import { store } from "@/store/store";
-// import { supabase } from '@/supabase/supabase.config';
 import {
   IonContent,
   IonHeader,
@@ -64,18 +69,26 @@ import {
   IonButton,
   IonLabel,
   IonIcon,
+  IonCard,
+  IonCardTitle,
+  IonCardHeader,
+  IonCardContent,
   modalController,
 } from "@ionic/vue";
-import { close } from "ionicons/icons";
+import { close, save } from "ionicons/icons";
 import { User } from "@supabase/supabase-js";
 import { defineComponent } from "vue";
 import router from "@/router";
-// import Avatar from '@/components/Avatar.vue';
+import Avatar from "@/components/Avatar.vue";
 import { mapActions, mapGetters } from "vuex";
 export default defineComponent({
   name: "modalAccountDetail",
   components: {
-    // Avatar,
+    IonCard,
+    IonCardTitle,
+    IonCardHeader,
+    IonCardContent,
+    Avatar,
     IonContent,
     IonHeader,
     IonTitle,
@@ -148,7 +161,7 @@ export default defineComponent({
   },
   setup() {
     const user = store.user as User;
-    return { user, close };
+    return { user, close, save };
   },
 });
 </script>

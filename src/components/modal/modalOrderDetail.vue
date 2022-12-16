@@ -85,6 +85,11 @@ import { defineComponent } from "vue";
 import { close, open } from "ionicons/icons";
 import ModalInvoice from "@/components/modal/modalInvoice.vue";
 import thumbnailPart from "../part/thumbnailPart.vue";
+import { isPlatform } from '@ionic/vue';
+import { usePdf } from "@/service/pdf-service";
+import { DocumentViewer } from "@awesome-cordova-plugins/document-viewer"
+const {  pdf, loadPdf, pdfSrc } = usePdf()
+
 export default defineComponent({
   name: "allProductsListModal",
   components: {
@@ -111,6 +116,8 @@ export default defineComponent({
     return {
       close,
       open,
+      pdf,
+      pdfSrc
     };
   },
   props: {
@@ -121,12 +128,24 @@ export default defineComponent({
       return modalController.dismiss(null, "cancel");
     },
     async openInvoice() {
+      if (isPlatform("android")) {
+        const options = {
+          title: 'My PDF'
+        }
+      DocumentViewer.viewDocument(this.pdfSrc.publicUrl, 'application/pdf', options)
+        // window.open('http://192.168.1.49:8081/?invoice='+ this.order?.invoice_pdf)
+      }
+      else {
       const modal = await modalController.create({
         component: ModalInvoice,
-        componentProps: { order: this.order},
+        componentProps: { order: this.pdfSrc},
       });
       modal.present();
+    }
     },
+  },
+  mounted() {
+    loadPdf(this.order?.invoice_pdf)
   },
 });
 </script>

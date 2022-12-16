@@ -10,14 +10,17 @@
     </ion-toolbar>
   </ion-header>
   <ion-content class="ion-padding">
-    <ion-list>
-      <ion-item button :detail="true">
-    <ion-label>
-      <h3>Button Item</h3>
-      <p>Detail set to true - detail arrow displays on both modes</p>
-    </ion-label>
-  </ion-item>
+    <ion-list v-if="notifications.length" >
+      <ion-item button :detail="true" @click="openOrderDetail(notification)" v-for="notification in notifications" :key="notification.id">
+        <ion-label>
+          <h3>Pesanan baru !!!</h3>
+          <p>{{ JSON.stringify(notification) }}</p>
+        </ion-label>
+      </ion-item>
     </ion-list>
+    <ion-item v-else color="success">
+      <ion-label><h1>sepertinya tidak ada notifikasi kali ini</h1></ion-label>
+    </ion-item>
   </ion-content>
 </template>
 
@@ -38,8 +41,9 @@ import {
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 import { close, open } from "ionicons/icons";
-import ModalInvoice from "@/components/modal/modalInvoice.vue";
-
+import ModalOrderDetail from "@/components/modal/modalOrderDetail.vue";
+import { supabase } from "@/supabase/supabase.config";
+import { RealtimeChannel } from "@supabase/realtime-js";
 export default defineComponent({
   name: "allProductsListModal",
   components: {
@@ -64,43 +68,16 @@ export default defineComponent({
     return {
       filter: "",
       search: "",
+      notifications: [] as any,
+      subsOrders:  undefined as unknown as RealtimeChannel
     };
   },
   computed: {
     ...mapGetters("order", ["getOrdersData"]),
-    // products() {
-    //   if (this.search && this.filter) {
-    //     return this.getOrdersData.filter(
-    //       (product: { title: string; category: { title: string } }) => {
-    //         return (
-    //           product.title.toLowerCase().includes(this.search.toLowerCase()) &&
-    //           product.category.title.toLowerCase() === this.filter.toLowerCase()
-    //         );
-    //       }
-    //     );
-    //   } else {
-    //     if (this.search && !this.filter) {
-    //       return this.getOrdersData.filter((product: { title: string }) => {
-    //         return product.title
-    //           .toLowerCase()
-    //           .includes(this.search.toLowerCase());
-    //       });
-    //     } else {
-    //       if (!this.search && this.filter) {
-    //         return this.getOrdersData.filter(
-    //           (product: { category: { title: string } }) => {
-    //             return (
-    //               product.category.title.toLowerCase() ===
-    //               this.filter.toLowerCase()
-    //             );
-    //           }
-    //         );
-    //       } else {
-    //         return this.getOrdersData;
-    //       }
-    //     }
-    //   }
-    // },
+    // notifications() {
+    //   const notifications: any[] = [];
+    //   return notifications;
+    // }
   },
   methods: {
     cancel() {
@@ -108,11 +85,29 @@ export default defineComponent({
     },
     async openOrderDetail(orderData: any) {
       const modal = await modalController.create({
-        component: ModalInvoice,
+        component: ModalOrderDetail,
         componentProps: { order: orderData },
       });
       modal.present();
     },
+    subscribes() {
+     this.subsOrders = supabase
+        .channel("public:order")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "order" },
+          (payload) => {
+            if (payload.new) {
+              this.notifications?.push(payload.new)
+            }
+            console.log("Change received!", payload);
+          }
+        )
+        .subscribe();
+    },
+  },
+  mounted() {
+    this.subscribes();
   },
 });
 </script>

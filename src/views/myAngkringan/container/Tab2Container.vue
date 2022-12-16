@@ -26,7 +26,7 @@
       <ion-card-content>
         <ion-list>
           <ion-item
-            v-for="orderData in getMinimalOrdersData"
+            v-for="orderData in getOrdersData.filter((x: any, y: number) => y < 3)"
             :key="orderData.id"
           >
             <ion-label
@@ -66,7 +66,7 @@
         </ion-item>
         <ion-list>
           <ion-item
-            v-for="productData in getMinimalProductsData"
+            v-for="productData in getProductsData.filter((x: any, y: number) => y < 3)"
             :key="productData.id"
           >
             <thumbnailPart
@@ -135,8 +135,8 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapGetters("order", ["getMinimalOrdersData", "getOrdersData"]),
-    ...mapGetters("product", ["getMinimalProductsData"]),
+    ...mapGetters("order", ["getOrdersData"]),
+    ...mapGetters("product", ["getProductsData"])
   },
   methods: {
     async openAllProductsListModal() {

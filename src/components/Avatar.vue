@@ -2,13 +2,13 @@
   <div class="avatar">
     <div class="avatar_wrapper" @click="uploadAvatar">
       <img v-if="avatarUrl" :src="avatarUrl" />
-      <ion-icon v-else name="person" class="no-avatar"></ion-icon>
+      <ion-icon v-else :icon="person" class="no-avatar"></ion-icon>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, toRefs, watch, defineComponent } from 'vue';
+import { ref, defineComponent } from 'vue';
 import { supabase } from '@/supabase/supabase.config';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { IonIcon } from '@ionic/vue';
@@ -18,24 +18,23 @@ export default defineComponent({
   props: { path: String },
   emits: ['upload', 'update:path'],
   components: { IonIcon },
-  setup(prop, { emit }) {
-    const { path } = toRefs(prop);
-    const avatarUrl = ref('');
-
-    const downloadImage = async () => {
+  methods: {
+  async  downloadImage() {
       try {
         const { data, error } = await supabase.storage
           .from('avatars')
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          .download(path.value!);
+          .download(this.path!);
         if (error) throw error;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        avatarUrl.value = URL.createObjectURL(data!);
+        this.avatarUrl = URL.createObjectURL(data!);
       } catch (error: any) {
         console.error('Error downloading image: ', error.message);
       }
-    };
-
+    }
+  },
+  setup(prop, { emit }) {
+    const avatarUrl = ref('');
     const uploadAvatar = async () => {
       try {
         const photo = await Camera.getPhoto({
@@ -66,12 +65,10 @@ export default defineComponent({
         console.log(error);
       }
     };
-
-    watch(path, () => {
-      if (path.value) downloadImage();
-    });
-
     return { avatarUrl, uploadAvatar, person };
+  },
+  mounted() {
+    this.downloadImage();
   },
 });
 </script>
