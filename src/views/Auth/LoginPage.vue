@@ -30,6 +30,7 @@
               >
               / <a href="/auth/register" class="text-sm">Daftar</a>
             </p>
+            <p><span>email : sabdatama1100@gmail.com</span> <span>pass: admin123</span></p>
           </div>
         </div>
       </div>
