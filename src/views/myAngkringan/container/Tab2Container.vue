@@ -8,6 +8,9 @@
       <ion-card-content>
         <StatsCardPart :TotalOrders="getOrdersData"/>
       </ion-card-content>
+            <ion-button expand="block" @click="openChartModal"
+        >Tampilkan Grafik</ion-button
+      >
     </ion-card>
     <!-- <ion-card>
       <ion-card-header>
@@ -112,6 +115,7 @@ import thumbnailPart from "../../../components/part/thumbnailPart.vue";
 import ModalAllProductList from "@/components/modal/modalAllProductList.vue";
 import ModalAddProduct from "@/components/modal/modalAddProduct.vue";
 import ModalAllOrdersList from "@/components/modal/modalAllOrdersList.vue";
+import ModalChartDetail from "@/components/modal/modalChartDetail.vue";
 export default defineComponent({
   name: "Tab2Container",
   components: {
@@ -157,6 +161,12 @@ export default defineComponent({
       });
       modal.present();
     },
+    async openChartModal() {
+      const modal = await modalController.create({
+        component: ModalChartDetail
+      });
+      modal.present();
+    }
   },
 });
 </script>
